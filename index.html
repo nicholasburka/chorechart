@@ -26,7 +26,7 @@
         h1, h2 {
             color: #333;
         }
-        #currentResponsible, #nextResponsible, #currentPeriod {
+        #topFloorResponsible, #bottomFloorResponsible, #currentPeriod {
             font-size: 1.2rem;
             margin: 1rem 0;
         }
@@ -45,8 +45,8 @@
 <body>
     <div class="container">
         <h1>Who's Turn Is It?</h1>
-        <div id="currentResponsible"></div>
-        <div id="nextResponsible"></div>
+        <div id="topFloorResponsible"></div>
+        <div id="bottomFloorResponsible"></div>
         <div id="currentPeriod"></div>
         
         <div class="responsibilities">
@@ -67,7 +67,7 @@
     </div>
 
     <script>
-        const roommates = ['Dieum', 'Nic'];
+        const roommates = ['Roommate 1', 'Roommate 2'];
         
         function determineResponsibility() {
             const currentDate = new Date();
@@ -80,22 +80,22 @@
             const currentDay = currentDate.getDay(); // 0 (Sunday) to 6 (Saturday)
             const isTransitionPeriod = currentDay >= 3 && currentDay <= 4; // Wednesday or Thursday
             
-            const currentResponsible = roommates[weeksPassed % roommates.length];
-            const nextResponsible = roommates[(weeksPassed + 1) % roommates.length];
+            const topFloorResponsible = roommates[weeksPassed % roommates.length];
+            const bottomFloorResponsible = roommates[(weeksPassed + 1) % roommates.length];
             
-            return { currentResponsible, nextResponsible, isTransitionPeriod };
+            return { topFloorResponsible, bottomFloorResponsible, isTransitionPeriod };
         }
 
         function updateDisplay() {
-            const { currentResponsible, nextResponsible, isTransitionPeriod } = determineResponsibility();
+            const { topFloorResponsible, bottomFloorResponsible, isTransitionPeriod } = determineResponsibility();
             
             if (isTransitionPeriod) {
-                document.getElementById('currentResponsible').innerHTML = `<strong>${currentResponsible}</strong> was responsible for the top floor.`;
-                document.getElementById('nextResponsible').innerHTML = `<strong>${nextResponsible}</strong> will take over on Friday.`;
+                document.getElementById('topFloorResponsible').innerHTML = `<strong>${topFloorResponsible}</strong> will take over the top floor on Friday.`;
+                document.getElementById('bottomFloorResponsible').innerHTML = `<strong>${bottomFloorResponsible}</strong> will take over the bottom floor on Friday.`;
                 document.getElementById('currentPeriod').textContent = "It's the transition period (Wednesday-Thursday).";
             } else {
-                document.getElementById('currentResponsible').innerHTML = `<strong>${currentResponsible}</strong> is responsible for the top floor.`;
-                document.getElementById('nextResponsible').textContent = "";
+                document.getElementById('topFloorResponsible').innerHTML = `<strong>${topFloorResponsible}</strong> is responsible for the top floor.`;
+                document.getElementById('bottomFloorResponsible').innerHTML = `<strong>${bottomFloorResponsible}</strong> is responsible for the bottom floor.`;
                 document.getElementById('currentPeriod').textContent = "Cleaning should be done between Friday and Tuesday.";
             }
         }
