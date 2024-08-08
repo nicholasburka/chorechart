@@ -90,7 +90,7 @@
             const { currentResponsible, nextResponsible, isTransitionPeriod } = determineResponsibility();
             
             if (isTransitionPeriod) {
-                document.getElementById('currentResponsible').innerHTML = `<strong>${currentResponsible}</strong> is currently responsible for the top floor.`;
+                document.getElementById('currentResponsible').innerHTML = `<strong>${currentResponsible}</strong> was responsible for the top floor.`;
                 document.getElementById('nextResponsible').innerHTML = `<strong>${nextResponsible}</strong> will take over on Friday.`;
                 document.getElementById('currentPeriod').textContent = "It's the transition period (Wednesday-Thursday).";
             } else {
