@@ -26,9 +26,8 @@
         h1, h2 {
             color: #333;
         }
-        #result {
-            font-size: 1.5rem;
-            font-weight: bold;
+        #currentResponsible, #nextResponsible, #currentPeriod {
+            font-size: 1.2rem;
             margin: 1rem 0;
         }
         .responsibilities {
@@ -46,8 +45,9 @@
 <body>
     <div class="container">
         <h1>Who's Turn Is It?</h1>
-        <p>To clean the top floor this week:</p>
-        <div id="result"></div>
+        <div id="currentResponsible"></div>
+        <div id="nextResponsible"></div>
+        <div id="currentPeriod"></div>
         
         <div class="responsibilities">
             <h2>Cleaning Responsibilities</h2>
@@ -67,16 +67,40 @@
     </div>
 
     <script>
-        const roommates = ['Nick', 'Dieum'];
+        const roommates = ['Nic', 'Dieum'];
         
-        function determineWhoseTurn() {
+        function determineResponsibility() {
             const currentDate = new Date();
-            const startDate = new Date(currentDate.getFullYear(), 0, 1); // January 1st of the current year
-            const weekNumber = Math.floor((currentDate - startDate) / (7 * 24 * 60 * 60 * 1000));
-            return roommates[weekNumber % roommates.length];
+            const startDate = new Date(currentDate.getFullYear(), 0, 4); // First Wednesday of the year
+            startDate.setDate(startDate.getDate() - startDate.getDay() + 3); // Adjust to the first Wednesday
+
+            const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+            const weeksPassed = Math.floor((currentDate - startDate) / msPerWeek);
+            
+            const currentDay = currentDate.getDay(); // 0 (Sunday) to 6 (Saturday)
+            const isTransitionPeriod = currentDay >= 3 && currentDay <= 4; // Wednesday or Thursday
+            
+            const currentResponsible = roommates[weeksPassed % roommates.length];
+            const nextResponsible = roommates[(weeksPassed + 1) % roommates.length];
+            
+            return { currentResponsible, nextResponsible, isTransitionPeriod };
         }
 
-        document.getElementById('result').textContent = determineWhoseTurn();
+        function updateDisplay() {
+            const { currentResponsible, nextResponsible, isTransitionPeriod } = determineResponsibility();
+            
+            if (isTransitionPeriod) {
+                document.getElementById('currentResponsible').innerHTML = `<strong>${currentResponsible}</strong> is currently responsible for the top floor.`;
+                document.getElementById('nextResponsible').innerHTML = `<strong>${nextResponsible}</strong> will take over on Friday.`;
+                document.getElementById('currentPeriod').textContent = "It's the transition period (Wednesday-Thursday).";
+            } else {
+                document.getElementById('currentResponsible').innerHTML = `<strong>${currentResponsible}</strong> is responsible for the top floor.`;
+                document.getElementById('nextResponsible').textContent = "";
+                document.getElementById('currentPeriod').textContent = "Cleaning should be done between Friday and Tuesday.";
+            }
+        }
+
+        updateDisplay();
     </script>
 </body>
 </html>
